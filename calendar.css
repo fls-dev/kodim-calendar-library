@@ -6,7 +6,7 @@ body {
     font-size: 100%;
     line-height: 1.5;
     font-family: sans-serif;
-    background: #28283b;
+    background: #adceca;
     color: #444;
 }
 *,
@@ -18,11 +18,6 @@ body {
     content: "";
     display: table;
     clear: both;
-}
-img {
-    max-width: 100%;
-    height: auto;
-    vertical-align: baseline;
 }
 a {
     text-decoration: none;
@@ -42,6 +37,9 @@ table {
     border-radius: 3px;
     border-collapse: collapse;
     color: #444;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 td {
     height: 48px;
@@ -51,14 +49,42 @@ td {
     border-top: 1px solid #dcdcff;
     width: 14.28571429%;
 }
-td.not-current {
-    color: #c0c0c0;
+.days td{
+    height: 48px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    border-right: 1px solid #dcdcff;
+    border-top: 1px solid #dcdcff;
+    width: 14.28571429%;
 }
+.cal-kodim-head{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+td.not-current {
+    color: #ebebeb;
+}
+td.normal {cursor: pointer}
 td.today {
-    font-weight: 700;
+    font-weight: 500;
     color: #28283b;
     font-size: 1.5em;
+    background: #ffffb8;
 }
+td.c-weekend{
+    pointer-events: none;
+    color: red;
+}
+td.c-past-days{
+    pointer-events: none;
+    color: #b7b7b2;
+}
+td.c-selected-days{
+    background: #90dfff;
+}
+
 thead td {
     border: none;
     color: #28283b;
