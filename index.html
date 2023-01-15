@@ -9,18 +9,12 @@
 <div id="startCalendar"></div>
 <script src="calendar.js"></script>
 <script>
-    kodimKalendar.init('#startCalendar',{lang: "pl", minDateToday: 1});
-
-    // var c = new KodimCalendar('.startCalendar');
-    // c.showcurr();
-
-    // // Привязываем кнопки «Следующий» и «Предыдущий»
-    // getId('btnNext').onclick = function() {
-    //     c.nextMonth();
-    // };
-    // getId('btnPrev').onclick = function() {
-    //     c.previousMonth();
-    // };
+    const settings = {
+        lang: "pl",
+        minDateToday: 1,
+        disableWeekend: 0
+    }
+    kodimKalendar.init('#startCalendar',settings);
 </script>
 </body>
 </html>

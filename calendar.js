@@ -4,6 +4,7 @@
         colorNext: "red",
         lang: "ru",
         minDateToday: 1,
+        disableWeekend: 0,
         idDivCal: "kMainDiv",
         btnNext: "btnNext",
         btnPrev: "btnPrev",
@@ -28,8 +29,8 @@
             },
         }
 
-        _KodimLibObject.init = function (selector, settings = 0) {
-            if (settings !== 0) {
+        _KodimLibObject.init = function (selector, settings = {}) {
+            if (settings !== {}) {
                 KodimLibSettings = Object.assign(KodimLibSettings, settings)
             }
             // console.log(lang[KodimLibSettings.lang])
@@ -61,10 +62,11 @@
             const kDays = document.querySelectorAll('.k-days');
             var i = 0, l = kDays.length;
             while (i < l) {
-                if (kDays[i].innerHTML === KodimLibSettings.currDay.toString()) {
+                if (kDays[i].innerHTML === KodimLibSettings.currDay.toString() &&  KodimLibSettings.currMonth === new Date().getMonth()) {
                     kDays[i].classList.remove('c-selected-days', 'c-past-days');
                     kDays[i].classList.add('today', 'k-days');
-                } else if (kDays[i].innerHTML === target.innerHTML) {
+                }
+                else if (kDays[i].innerHTML === target.innerHTML) {
                     kDays[i].classList.add('c-selected-days', 'k-days');
                 } else {
                     kDays[i].classList.remove('c-selected-days');
@@ -91,38 +93,29 @@
             }
             KodimLib().showCurrent();
         };
-        _KodimLibObject.setEventPrev = function (e) {
-            console.log(KodimLibSettings)
-            console.log("setEventPrev")
-            console.log(e.target)
-        };
         _KodimLibObject.showCurrent = function () {
             KodimLib().showMonth(KodimLibSettings.currYear, KodimLibSettings.currMonth);
         };
         _KodimLibObject.showMonth = function (y, m) {
-            var d = new Date()
+            let d = new Date()
                 , firstDayOfMonth = new Date(y, m, 7).getDay()
                 , lastDateOfMonth = new Date(y, m + 1, 0).getDate()
-                , lastDayOfLastMonth = m == 0 ? new Date(y - 1, 11, 0).getDate() : new Date(y, m, 0).getDate();
-            var html = '<table>';
+                , lastDayOfLastMonth = m === 0 ? new Date(y - 1, 11, 0).getDate() : new Date(y, m, 0).getDate();
+            let html = '<table class="c-calendar-table">';
             html += '<thead><tr>';
             html += '<td colspan="7">' + lang[KodimLibSettings.lang].months[m] + ' ' + y + '</td>';
-            html += '</tr></thead>';
+            html += '</tr></thead><tbody class="c-calendar-tbody">';
             html += '<tr class="days">';
-            for (var i = 0; i < lang[KodimLibSettings.lang].days.length; i++) {
+            for (let i = 0; i < lang[KodimLibSettings.lang].days.length; i++) {
                 html += '<td>' + lang[KodimLibSettings.lang].days[i] + '</td>';
             }
             html += '</tr>';
-            // Recording days
-
-            var i = 1;
+            let i = 1;
             do {
-                var dow = new Date(y, m, i).getDay();
-                // Start a new line on Monday
+                let dow = new Date(y, m, i).getDay();
                 if (dow === 1) {
                     html += '<tr>';
                 }
-                // If the first day of the week is not Monday, show the last days of the previous month
                 else if (i === 1) {
                     html += '<tr>';
                     var k = lastDayOfLastMonth - firstDayOfMonth + 1;
@@ -132,12 +125,12 @@
                     }
                 }
                 // Recording the current day in a cycle
-                var chk = new Date();
-                var chkY = chk.getFullYear();
-                var chkM = chk.getMonth();
-                if (chkY === KodimLibSettings.currYear && chkM === KodimLibSettings.currMonth && i === KodimLibSettings.currDay) {
-                    html += '<td class="k-days c-selected-days">' + i + '</td>';
-                } else if(dow === 6 || dow === 0){
+                let chk = new Date();
+                let chkM = chk.getMonth();
+                if (i === KodimLibSettings.currDay && chkM === KodimLibSettings.currMonth) {
+                    html += '<td class="k-days today">' + i + '</td>';
+                } else
+                if(dow === 6 || dow === 0){
                     html += '<td class="k-days c-weekend">' + i + '</td>';
                 } else if (new Date(y, m, i)<new Date() && KodimLibSettings.minDateToday===1) {
                     html += '<td class="k-days c-past-days">' + i + '</td>';
@@ -148,7 +141,7 @@
                     html += '</tr>';
                 }
                 else if (i === lastDateOfMonth) {
-                    var k = 1;
+                    let k = 1;
                     for (dow; dow < 7; dow++) {
                         html += '<td class="not-current">' + k + '</td>';
                         k++;
@@ -156,13 +149,30 @@
                 }
                 i++;
             } while (i <= lastDateOfMonth);
-            // End table
-            html += '</table>';
-            // add content to div
+            html += '</tbody></table>';
             document.getElementById(KodimLibSettings.idDivCal).innerHTML = html;
+            KodimLib().setTodayDate()
         };
 
-
+        _KodimLibObject.setTodayDate = function () {
+            console.log(new Date().getDay())
+            const allTd = document.querySelectorAll('.c-calendar-tbody td');
+            let control = 0;
+            const t = new Date().getDay();
+            if(KodimLibSettings.disableWeekend === 0 && t===6){
+                control = 2
+            }
+            if(KodimLibSettings.disableWeekend === 0 && t ===0){
+                control = 1
+            }
+                var d = 0, le = allTd.length, cm = new Date().getDate();
+                while (d < le) {
+                    if(allTd[d].innerHTML===cm.toString() && new Date().getMonth() === KodimLibSettings.currMonth){
+                        allTd[d+control].classList.add("k-days","c-selected-days")
+                    }
+                    d++;
+                }
+        }
         _KodimLibObject.getSettings = function () {
             return KodimLibSettings;
         };
@@ -176,176 +186,3 @@
         console.error("error init")
     }
 })(window);
-
-
-// function KodimCalendar(selector){
-//     const element = document.querySelector(selector);
-//     return new initFunc(element);
-// }
-
-// function initFunc(startDiv){
-// // var KodimCalendar = function(startDiv) {
-//     startDiv.classList.add('calendar-wrapper');
-//     const create = '<button id="btnPrev" type="button">&#8249;</button><button id="btnNext" type="button">&#8250;</button><div id="kMainDiv"></div>';
-//     startDiv.insertAdjacentHTML('afterbegin', create);
-//     document.getElementById('btnNext').addEventListener('click', KodimCalendar.prototype.nextMonth)
-//     //save main div insert
-//     this.divId = "kMainDiv";
-//
-//     // days
-//     this.DaysOfWeek = [
-//         'Пн',
-//         'Вт',
-//         'Ср',
-//         'Чт',
-//         'Пт',
-//         'Сб',
-//         'Вс'
-//     ];
-//
-//     // months
-//     this.Months =['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-//
-//     //Setting the current month, year
-//     var d = new Date();
-//
-//     this.currMonth = d.getMonth('9');
-//     this.currYear = d.getFullYear('22');
-//     this.currDay = d.getDate('3');
-// };
-
-/**
- *
- * prototype
- *
- */
-// Go to the next month
-// KodimCalendar.prototype.nextMonth = function() {
-//     if ( this.currMonth == 11 ) {
-//         this.currMonth = 0;
-//         this.currYear = this.currYear + 1;
-//     }
-//     else {
-//         this.currMonth = this.currMonth + 1;
-//     }
-//     KodimCalendar.prototype.showcurr();
-// };
-//
-// // Go to the previous month
-// KodimCalendar.prototype.previousMonth = function() {
-//     if ( this.currMonth == 0 ) {
-//         this.currMonth = 11;
-//         this.currYear = this.currYear - 1;
-//     }
-//     else {
-//         this.currMonth = this.currMonth - 1;
-//     }
-//     this.showcurr();
-// };
-//
-// // Show the current month
-// KodimCalendar.prototype.showcurr = function() {
-//     KodimCalendar.prototype.showMonth(this.currYear, this.currMonth);
-// };
-//
-//
-//
-// // Show month (year, month)
-// KodimCalendar.prototype.showMonth = function(y, m) {
-//
-//     var d = new Date()
-//         // first day of the current month
-//         , firstDayOfMonth = new Date(y, m, 7).getDay()
-//         // last day of the current month
-//         , lastDateOfMonth =  new Date(y, m+1, 0).getDate()
-//         // Last day of the previous month
-//         , lastDayOfLastMonth = m == 0 ? new Date(y-1, 11, 0).getDate() : new Date(y, m, 0).getDate();
-//
-//     //  create table
-//     var html = '<table>';
-//
-//     // Recording of the selected month and year
-//     html += '<thead><tr>';
-//     html += '<td colspan="7">' + this.Months[m] + ' ' + y + '</td>';
-//     html += '</tr></thead>';
-//
-//
-//     // heading of days of the week
-//     html += '<tr class="days">';
-//     for(var i=0; i < this.DaysOfWeek.length;i++) {
-//         html += '<td>' + this.DaysOfWeek[i] + '</td>';
-//     }
-//     html += '</tr>';
-//
-//     // Recording days
-//     var i=1;
-//     do {
-//         var dow = new Date(y, m, i).getDay();
-//
-//         // Start a new line on Monday
-//         if ( dow === 1 ) {
-//             html += '<tr>';
-//         }
-//
-//         // If the first day of the week is not Monday, show the last days of the previous month
-//         else if ( i === 1 ) {
-//             html += '<tr>';
-//             var k = lastDayOfLastMonth - firstDayOfMonth+1;
-//             for(var j=0; j < firstDayOfMonth; j++) {
-//                 html += '<td class="not-current">' + k + '</td>';
-//                 k++;
-//             }
-//         }
-//
-//         // Recording the current day in a cycle
-//         var chk = new Date();
-//         var chkY = chk.getFullYear();
-//         var chkM = chk.getMonth();
-//         if (chkY == this.currYear && chkM == this.currMonth && i == this.currDay) {
-//             html += '<td class="today">' + i + '</td>';
-//         } else {
-//             html += '<td class="normal">' + i + '</td>';
-//         }
-//         // close the line on Sunday
-//         if ( dow == 0 ) {
-//             html += '</tr>';
-//         }
-//         // If the last day of the month is not Sunday, show the first days of the next month
-//         else if ( i == lastDateOfMonth ) {
-//             var k=1;
-//             for(dow; dow < 7; dow++) {
-//                 html += '<td class="not-current">' + k + '</td>';
-//                 k++;
-//             }
-//         }
-//
-//         i++;
-//     }while(i <= lastDateOfMonth);
-//
-//     // End table
-//     html += '</table>';
-//
-//     // add content to div
-//     document.getElementById(this.divId).innerHTML = html;
-// };
-
-// При загрузке окна
-// window.onload = function() {
-//
-//     // Начать календарь
-//     var c = new KodimCalendar("divKodimCalendar");
-//     c.showcurr();
-//
-//     // Привязываем кнопки «Следующий» и «Предыдущий»
-//     getId('btnNext').onclick = function() {
-//         c.nextMonth();
-//     };
-//     getId('btnPrev').onclick = function() {
-//         c.previousMonth();
-//     };
-// }
-//
-// // Получить элемент по id
-// function getId(id) {
-//     return document.getElementById(id);
-// }
