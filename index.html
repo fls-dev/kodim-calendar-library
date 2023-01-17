@@ -4,18 +4,27 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="calendar.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,500,600,700&amp;subset=all" rel="stylesheet"
+          type="text/css">
+
+    <style>
+        body{
+            background: antiquewhite;
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
 </head>
 <body>
 
 <div id="startCalendar"></div>
 
-
-<script src="calendar.js"></script>
+</div>
+<script src="calendar2.js"></script>
 <script>
     const settings = {
         lang: "pl",
         minDateToday: 1,
-        // disableWeekend: 1,
+        weekend: 0,
         formatDate:"dd-MM-yyyy",
         message: {
             ru:{key1:"ВашаRU консультация будет оказана сегодня до 18:00", key2: "ВашаRU консультация будет оказана сегодня до 18:00<br>* Консультации заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00", key3: "КонсультацииRU заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00"},

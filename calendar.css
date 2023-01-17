@@ -1,43 +1,83 @@
-html,
-body {
-    height: 100%;
-}
-body {
-    font-size: 100%;
-    line-height: 1.5;
-    font-family: sans-serif;
-    /*background: #adceca;*/
-    color: #444;
-}
-*,
-*:before,
-*:after {
-    box-sizing: border-box;
-}
-.group:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-a {
-    text-decoration: none;
-}
+/*#startCalendar {*/
+/*    margin: 100px 0;*/
+/*    background: #fff;*/
+/*    width: 300px*/
+/*}*/
 
-.flex {
-    display: flex;
-    justify-content: space-between;
-    row-gap: 50px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-.k-days:hover:not(.c-weekend){background: #f2f2f2;}
+/*.c-calendar-head {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    margin-bottom: 10px*/
+/*}*/
 
-#cInsMessBlock{
-    font-size: 10px;
-    /*border: 1px solid rgb(236, 236, 236);*/
-    border-radius: 5px;
-    padding: 5px;
-}
+/*.c-calendar-body {*/
+/*    display: block*/
+/*}*/
+
+/*div.days, div.kod-line {*/
+/*    display: flex;*/
+/*    justify-content: space-around*/
+/*}*/
+
+/*.kod-line div {*/
+/*    width: 35px;*/
+/*    line-height: 35px;*/
+/*    height: 35px;*/
+/*    text-align: center;*/
+/*    border: 1px solid transparent;*/
+/*}*/
+/*#kodimValue{*/
+/*    border: 1px solid rgb(218, 218, 218);*/
+/*    text-align: center;*/
+/*    margin: 0 auto 15px auto;*/
+/*    width: 100%;*/
+/*    border-radius: 0 0 5px 5px;*/
+/*    display: block*/
+/*}*/
+
+/*#btnNext, #btnPrev {*/
+/*    font-size: 18px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.c-calendar-body div.not-current {*/
+/*    color: #ebebeb;*/
+/*}*/
+/*!**!*/
+/*.c-calendar-body div.normal {*/
+/*    cursor: pointer;*/
+/*    color: blue;*/
+/*}*/
+
+/*.c-calendar-body div.days {color: #28283b;font-size: 12px;}*/
+/*.c-calendar-body td.c-weekend {${st} color: #ff5555;}*/
+/*.c-calendar-body div.c-past-days {*/
+/*    pointer-events: none;*/
+/*    color: #b7b7b2;*/
+/*}*/
+
+/*.c-calendar-body div.c-selected-days {*/
+/*    border: 1px solid blue*/
+/*}*/
+
+/*.c-calendar-head div {*/
+/*    border: none;*/
+/*    color: #28283b;*/
+/*    font-size: 16px;*/
+/*}*/
+/*#cInsMessBlock{*/
+/*    font-size: 10px;*/
+/*    !*border: 1px solid rgb(236, 236, 236);*!*/
+/*    border-radius: 5px;*/
+/*    padding: 5px;*/
+/*}*/
+
+/**/
+/**/
+/**/
+/*.k-days:hover:not(.c-weekend){background: #f2f2f2;}*/
+/*.c-calendar-body div.days {color: #28283b;font-size: 12px;}*/
+
 
 /*font-size: 18px;*/
 /*cursor: pointer;*/
@@ -78,25 +118,25 @@ a {
 /*    justify-content: space-between;*/
 /*    margin-bottom: 10px;*/
 /*}*/
-/*td.not-current {*/
+/*div.not-current {*/
 /*    color: #ebebeb;*/
 /*}*/
-/*td.normal {cursor: pointer}*/
-/*td.today {*/
+/*div.normal {cursor: pointer}*/
+/*div.today {*/
 /*    font-weight: 500;*/
 /*    color: #28283b;*/
 /*    font-size: 1.5em;*/
 /*    background: #ffffb8;*/
 /*}*/
-/*td.c-weekend{*/
+/*div.c-weekend{*/
 /*    pointer-events: none;*/
 /*    color: red;*/
 /*}*/
-/*td.c-past-days{*/
+/*div.c-past-days{*/
 /*    pointer-events: none;*/
 /*    color: #b7b7b2;*/
 /*}*/
-/*td.c-selected-days{*/
+/*div.c-selected-days{*/
 /*    background: #90dfff;*/
 /*}*/
 
@@ -106,3 +146,9 @@ a {
 /*    text-transform: uppercase;*/
 /*    font-size: 1.5em;*/
 /*}*/
+
+
+
+
+
+
