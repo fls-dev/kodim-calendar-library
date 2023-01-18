@@ -11,6 +11,7 @@
         inputId: "kodimValue",
         formatDate: "yyyy-MM-dd",
         width: '280px',
+        oldV: "",
         message: {}
     };
 
@@ -34,6 +35,7 @@
         }
 
         _KodimLibObject.init = function (selector, settings = {}) {
+            KodimLibSettings.selector = selector;
             if (settings !== {}) {
                 KodimLibSettings = Object.assign(KodimLibSettings, settings)
             }
@@ -48,14 +50,15 @@
             startDiv.insertAdjacentHTML('afterbegin', create);
             const d = new Date();
             KodimLibSettings.currMonth = d.getMonth();
-            const style = `<style>#${KodimLibSettings.idDivCal}{background:#fff;width:${KodimLibSettings.width};border-top: 1px solid;border-left: 1px solid;border-right: 1px solid;border-color: #ccc;border-radius: 5px 5px 0 0;}#${selector}{width: ${KodimLibSettings.width}}#${selector} *{box-sizing: border-box}.c-calendar-head{display:flex;justify-content:space-between;margin-bottom:10px}.c-calendar-body{display:block}.c-calendar-body div.days {color: #28283b;font-size: 12px;}.c-calendar-body div.days,.c-calendar-body div.kod-line{display:flex;justify-content:space-around}.kod-line div{width:35px;line-height:35px;height:35px;text-align:center;border:1px solid transparent}#${KodimLibSettings.inputId}{padding: 5px;border:1px solid #dadada;text-align:center;margin:0 auto 15px;width:100%;border-radius:0 0 5px 5px;display:block}#${KodimLibSettings.btnPrev},#${KodimLibSettings.btnNext}{font-size:18px;cursor:pointer;width:25px;height:25px;background:#fff;border:none;border-radius: 5px;}.c-calendar-body div.not-current{color:#ebebeb}.c-calendar-body div.normal{cursor:pointer;color:blue}.c-calendar-body div.c-weekend{${st} color: #ff5555;}.c-calendar-body div.today{font-weight:500;color:#28283b;font-size:15px;border:1px solid green}.c-calendar-body div.c-past-days{pointer-events:none;color:#b7b7b2}.c-calendar-body div.c-selected-days{border:1px solid blue}.c-calendar-head div{border:none;color:#28283b;font-size:16px}#cInsMessBlock{font-size:10px;border-radius:5px;padding:5px}</style>`;
+            const style = `<style>#${KodimLibSettings.idDivCal}{background:#fff;width:${KodimLibSettings.width};border-top: 1px solid;border-left: 1px solid;border-right: 1px solid;border-color: #ccc;border-radius: 5px 5px 0 0;}#${selector}{width: ${KodimLibSettings.width}}#${selector} *{box-sizing: border-box; font-weight: 300;font-size: 13px}.c-calendar-head{display:flex;justify-content:space-between;align-items: center;margin-bottom:10px}.c-calendar-body{display:block}.c-calendar-body div.days {color: #28283b;font-size: 12px;}.c-calendar-body div.days,.c-calendar-body div.kod-line{display:flex;justify-content:space-around}.kod-line div{width:35px;line-height:35px;height:35px;text-align:center;border:1px solid transparent}#${KodimLibSettings.inputId}{padding: 5px;border:1px solid #dadada;text-align:center;margin:0 auto 15px;width:100%;border-radius:0 0 5px 5px;display:block}#${KodimLibSettings.btnPrev},#${KodimLibSettings.btnNext}{font-size:18px;line-height: 16px;cursor:pointer;width:25px;height:25px;background:#fff;border:none;border-radius: 5px;}.c-calendar-body div.not-current{color:#ebebeb}.c-calendar-body div.normal{cursor:pointer;color:blue}.c-calendar-body div.c-weekend{${st} color: #ff5555;}.c-calendar-body div.today{font-weight:500;color:green;font-size:15px;}.c-calendar-body div.c-past-days{pointer-events:none;color:#b7b7b2}.c-calendar-body div.c-selected-days{border:1px solid blue}.c-calendar-head div{border:none;color:#28283b;font-size:16px}#cInsMessBlock{font-size:10px;border-radius:5px;padding:5px}</style>`;
             document.head.insertAdjacentHTML("beforeend", style);
             KodimLibSettings.currYear = d.getFullYear();
             KodimLibSettings.currDay = d.getDate();
             startDiv.addEventListener('click', (e) => {
-                if (e.target.id === KodimLibSettings.btnNext) {
+                const id = e.target.id;
+                if (id === KodimLibSettings.btnNext) {
                     KodimLib().nextMonth(e)
-                } else if (e.target.id === KodimLibSettings.btnPrev) {
+                } else if (id === KodimLibSettings.btnPrev) {
                     KodimLib().previousMonth(e)
                 } else if (e.target.classList.contains('normal')) {
                     KodimLib().eventClick(e.target)
@@ -66,66 +69,80 @@
                 }
             })
             KodimLib().showCurrent();
-            document.getElementById(KodimLibSettings.inputId).value = KodimLib().customFormatDate(d.getDate());
+            const inD = KodimLib().customFormatDate(d.getDate());
+            const inpId = document.getElementById(KodimLibSettings.inputId);
+            inpId.value = inD;
+           // inpId.dispatchEvent(new Event('change'));
         };
 
-
-        _KodimLibObject.eventClick = function (target) {
+        _KodimLibObject.eventClick = function (target, type) {
             const t = target.innerHTML;
             const date = new Date();
-            const dow = new Date(KodimLibSettings.currYear, KodimLibSettings.currMonth, t);
-            const weekOff = KodimLibSettings.weekend;
+            const dow = new Date(KodimLibSettings.currYear, KodimLibSettings.currMonth, Number(t));
             const render = document.getElementById('cInsMessBlock');
-            const nowM = date.getMonth();
             const ch = date.getHours();
             const cm = date.getMinutes();
-            const d = KodimLib().customFormatDate(t);
+            const gD = date.getDate().toString();
+            const gM = date.getMonth();
             const kDays = document.querySelectorAll('.k-days');
+            const dIso = date.toLocaleDateString();
+            const dowIso = dow.toLocaleDateString();
+            KodimLibSettings.oldV = dow;
 
-            if(dow>date) {
-                let i = 0, l = kDays.length;
-                while (i < l) {
+            if(dow >= new Date()){
+                for(let i=0;i<kDays.length;i++){
                     const elem = kDays[i].innerHTML;
-                    if (elem === KodimLibSettings.currDay.toString() && KodimLibSettings.currMonth === nowM && elem === t) {
-                        kDays[i].className = "c-selected-days k-days"
-                    } else if (elem === KodimLibSettings.currDay.toString() && KodimLibSettings.currMonth === nowM) {
-                        kDays[i].className = "today k-days"
-                    } else if (elem === t) {
-                        kDays[i].classList.add('c-selected-days', 'k-days');
+                    if (elem === t) {
+                        kDays[i].classList.add('c-selected-days')
                     } else {
-                        kDays[i].classList.remove('c-selected-days', 'today');
-                        if (kDays[i].classList.contains('c-weekend') && weekOff === 1) {
-                            kDays[i].classList.add('normal', 'k-days');
-                        }
+                        kDays[i].classList.remove('c-selected-days')
                     }
-                    i++;
+                }
+            }else if(dIso===dowIso){
+                for(let i=0;i<kDays.length;i++){
+                    const elem = kDays[i].innerHTML;
+                    if (elem === t) {
+                        kDays[i].classList.add('c-selected-days')
+                    } else {
+                        kDays[i].classList.remove('c-selected-days')
+                    }
                 }
             }
+            const d = KodimLib().customFormatDate(t);
+            const d2 = KodimLib().customFormatDate(t, "yyyy-MM-dd");
             document.getElementById(KodimLibSettings.inputId).value = d;
+            document.getElementById(KodimLibSettings.selector).dataset.actual = d2;
+            document.getElementById(KodimLibSettings.selector).dispatchEvent(new Event('change'));
 
-            // const ch = new Date("2023-01-16 17:20").getHours();
-            // const ch = new Date("2023-01-16 15:00").getHours();
+            // const inD = KodimLib().customFormatDate(d.getDate());
+            // const inpId = document.getElementById(KodimLibSettings.inputId);
+            // document.getElementById(KodimLibSettings.selector).dataset.actual = inD;
+            // inpId.value = inD;
 
-            // const cm = new Date("2023-01-16 17:20").getMinutes();
-            // const cm = new Date("2023-01-16 15:00").getMinutes();
-            // console.log("ch :" + ch)
-            // console.log("cm :" + cm)
-            // console.log("new Date().getDate() :" + new Date().getDate())
-            // console.log("target.innerHTML :" + target.innerHTML)
+            // const ch = new Date("2023-01-17 00:20").getHours();
+            // const ch = new Date("2023-01-17 17:20").getHours();
+            // const ch = new Date("2023-01-17 15:00").getHours();
 
-            if (date.getDate().toString() === t && KodimLibSettings.currMonth === date.getMonth()) {
-                if (9 <= ch && ch <= 17) {
-                    if (ch === 17 && cm <= 30) {
-                        render.innerHTML = `<span style="color:orange">${KodimLibSettings.message[KodimLibSettings.lang].key2}</span>`;
-                    } else {
-                        render.innerHTML = `<span style="color:green">${KodimLibSettings.message[KodimLibSettings.lang].key1}</span>`;
-                    }
-                } else {
-                    render.innerHTML = `<span style="color:red">${KodimLibSettings.message[KodimLibSettings.lang].key3}</span>`;
-                }
-            } else {
-                render.innerHTML = ""
-            }
+            // const cm = new Date("2023-01-17 17:20").getMinutes();
+            // const cm = new Date("2023-01-17 15:00").getMinutes();
+
+            // if (gD===t && KodimLibSettings.currMonth === gM) {
+            //     if (9 <= ch && ch <= 17) {
+            //         if (ch === 17 && cm <= 30) {
+            //             render.innerHTML = `<span style="color:orange">${KodimLibSettings.message[KodimLibSettings.lang].key2}</span>`;
+            //         }
+            //         else {
+            //             render.innerHTML = `<span style="color:green">${KodimLibSettings.message[KodimLibSettings.lang].key1}</span>`;
+            //         }
+            //     }else if(0 <= ch && ch <= 8){
+            //         render.innerHTML = `<span style="color:green">${KodimLibSettings.message[KodimLibSettings.lang].key4}</span>`;
+            //     }
+            //     else {
+            //         render.innerHTML = `<span style="color:red">${KodimLibSettings.message[KodimLibSettings.lang].key3}</span>`;
+            //     }
+            // } else {
+            //     render.innerHTML = ""
+            // }
         };
         _KodimLibObject.nextMonth = function () {
             if (KodimLibSettings.currMonth === 11) {
@@ -149,7 +166,7 @@
             KodimLib().showMonth(KodimLibSettings.currYear, KodimLibSettings.currMonth);
         };
         _KodimLibObject.showMonth = function (y, m) {
-            let d = new Date()
+          let d = new Date()
                 , firstDayOfMonth = new Date(y, m, 7).getDay()
                 , lastDateOfMonth = new Date(y, m + 1, 0).getDate()
                 , lastDayOfLastMonth = m === 0 ? new Date(y - 1, 11, 0).getDate() : new Date(y, m, 0).getDate();
@@ -182,7 +199,7 @@
                     html += '<div class="k-days c-weekend">' + i + '</div>';
                 } else if (new Date(y, m, i) < new Date() && KodimLibSettings.minDateToday === 1) {
                     html += '<div class="k-days c-past-days">' + i + '</div>';
-                } else {
+                }else {
                     html += '<div class="k-days normal">' + i + '</div>';
                 }
                 if (dow === 0) {
@@ -198,30 +215,33 @@
             } while (i <= lastDateOfMonth);
             html += '</div>';
             document.getElementById(KodimLibSettings.idDivCal).innerHTML = html;
-            KodimLib().setTodayDate()
+            KodimLib().setsDate();
         };
-        _KodimLibObject.setTodayDate = function () {
-            const allTd = document.querySelectorAll('.c-calendar-tbody div');
+        _KodimLibObject.setsDate = function () {
+            const dLast = new Date(KodimLibSettings.oldV);
+            const lD = dLast.getDate().toString();
+            const lM = dLast.getMonth();
+            const allDiv = document.querySelectorAll('.c-calendar-body div');
             let control = 0;
             const t = new Date().getDay();
+            const cm = new Date().getDate();
             if (KodimLibSettings.weekend === 0 && t === 6) {
                 control = 2
             }
             if (KodimLibSettings.weekend === 0 && t === 0) {
                 control = 1
             }
-            let d = 0, le = allTd.length, cm = new Date().getDate();
-            while (d < le) {
-                if (allTd[d].innerHTML === cm.toString() && new Date().getMonth() === KodimLibSettings.currMonth) {
-                    allTd[d + control].classList.add("k-days", "c-selected-days")
+            let le = allDiv.length;
+            for (let d = 0; d < le; d++) {
+                if (allDiv[d].innerHTML === lD && lM === KodimLibSettings.currMonth && allDiv[d].classList.contains('not-current') === false) {
+                    allDiv[d].classList.add("k-days", "c-selected-days")
                 }
-                d++;
+                if (allDiv[d].innerHTML === cm.toString() && new Date().getMonth() === KodimLibSettings.currMonth && isNaN(dLast.getTime())) {
+                    allDiv[d + control].classList.add("k-days", "c-selected-days")
+                }
             }
         }
-        _KodimLibObject.getSettings = function () {
-            return KodimLibSettings;
-        };
-        _KodimLibObject.customFormatDate = function (day) {
+        _KodimLibObject.customFormatDate = function (day, strF) {
             Date.prototype.format = function (format) {
                 const o = {
                     "M+": this.getMonth() + 1,
@@ -240,7 +260,11 @@
                             ("00" + o[k]).substr(("" + o[k]).length));
                 return format;
             }
-            return new Date(KodimLibSettings.currYear, KodimLibSettings.currMonth, day).format(KodimLibSettings.formatDate)
+            if(strF){
+                return new Date(KodimLibSettings.currYear, KodimLibSettings.currMonth, day).format(strF);
+            }else {
+                return new Date(KodimLibSettings.currYear, KodimLibSettings.currMonth, day).format(KodimLibSettings.formatDate);
+            }
         };
 
         return _KodimLibObject;
