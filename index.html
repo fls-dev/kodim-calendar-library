@@ -12,6 +12,7 @@
             background: antiquewhite;
             font-family: 'Open Sans', sans-serif;
         }
+        .no-event{pointer-events: none}
     </style>
 </head>
 <body>
@@ -20,8 +21,8 @@
 
 <div>
 <select id="priority">
-    <option value="1">срочно</option>
-    <option value="2">не срочно</option>
+    <option value="priority">срочно</option>
+    <option selected value="2">не срочно</option>
 </select>
 </div>
 <script src="kodim_datapicker.js"></script>
@@ -29,29 +30,9 @@
     const settings = {
         lang: "pl",
         minDateToday: 1,
-        weekend: 1,
+        weekend: 0,
         // formatDate:"yyyy-MM-dd",
         formatDate:"dd-MM-yyyy",
-        message: {
-            ru: {
-                key1: "ВашаRU консультация будет оказана сегодня до 18:00",
-                key2: "ВашаRU консультация будет оказана сегодня до 18:00<br>* Консультации заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-                key3: "КонсультацииRU заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-                key4: "ВашаRU консультация будет оказана сегодня c 09:00 до 18:00"
-            },
-            en: {
-                key1: "ВашаEN консультация будет оказана сегодня до 18:00",
-                key2: "ВашаEN консультация будет оказана сегодня до 18:00<br>* Консультации заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-                key3: "КонсультацииEN заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-                key4: "ВашаEN консультация будет оказана сегодня c 09:00 до 18:00"
-            },
-            pl: {
-                key1: "ВашаPL консультация будет оказана сегодня до 18:00",
-                key2: "ВашаPL консультация будет оказана сегодня до 18:00<br>* Консультации заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-                key3: "КонсультацииPL заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-                key4: "ВашаPL консультация будет оказана сегодня c 09:00 до 18:00"
-            },
-        }
     }
     // kodimKalendar.init('startCalendar',settings);
     const message={
@@ -59,71 +40,96 @@
             key1: "ВашаRU консультация будет оказана сегодня до 18:00",
             key2: "ВашаRU консультация будет оказана сегодня до 18:00<br>* Консультации заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
             key3: "КонсультацииRU заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-            key4: "ВашаRU консультация будет оказана сегодня c 09:00 до 18:00"
+            key4: "ВашаRU консультация будет оказана сегодня c 09:00 до 18:00",
+            key5: "СрочнаяRU консультация будет оказана сегодня в течение часа с момента заказа консультации.",
+            key6: "СрочныеRU консультации заказанные после 17:30 переносятся на следующий рабочий день и будут оказаны с 09:00 до 18:00.",
+            key7: "СрочнаяRU консультация будет оказана сегодня c 09:00 до 10:00."
         },
         en: {
             key1: "ВашаEN консультация будет оказана сегодня до 18:00",
             key2: "ВашаEN консультация будет оказана сегодня до 18:00<br>* Консультации заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
             key3: "КонсультацииEN заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-            key4: "ВашаEN консультация будет оказана сегодня c 09:00 до 18:00"
+            key4: "ВашаEN консультация будет оказана сегодня c 09:00 до 18:00",
+            key5: "СрочнаяEN консультация будет оказана сегодня в течение часа с момента заказа консультации.",
+            key6: "СрочныеEN консультации заказанные после 17:30 переносятся на следующий рабочий день и будут оказаны с 09:00 до 18:00.",
+            key7: "СрочнаяEN консультация будет оказана сегодня c 09:00 до 10:00."
         },
         pl: {
             key1: "ВашаPL консультация будет оказана сегодня до 18:00",
             key2: "ВашаPL консультация будет оказана сегодня до 18:00<br>* Консультации заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
             key3: "КонсультацииPL заказанные после 17:30 будут оказаны на следующий рабочий день с 09:00 до 18:00",
-            key4: "ВашаPL консультация будет оказана сегодня c 09:00 до 18:00"
-        },
+            key4: "ВашаPL консультация будет оказана сегодня c 09:00 до 18:00",
+            key5: "СрочнаяPL консультация будет оказана сегодня в течение часа с момента заказа консультации.",
+            key6: "СрочныеPL консультации заказанные после 17:30 переносятся на следующий рабочий день и будут оказаны с 09:00 до 18:00.",
+            key7: "СрочнаяPL консультация будет оказана сегодня c 09:00 до 10:00."
+        }
     }
     const lang = "ru";
 
     document.addEventListener("DOMContentLoaded", function(e) {
         kodimKalendar.init('startCalendar',settings);
-        document.getElementById('startCalendar').addEventListener("change", function(e) {
+
+        const main = document.getElementById('startCalendar');
+        const render = document.getElementById('cInsMessBlock');
+        document.getElementById('priority').addEventListener("change", function(e) {
+            console.log(e.target.value)
+            if(e.target.value === "priority"){
+                main.classList.add('no-event');
+                eventMessage()
+            }else{
+                main.classList.remove('no-event');
+            }
+        })
+
+        function eventMessage() {
             const priority = document.getElementById('priority').value;
-
+            console.log("eventMessage")
             const dateToday = new Date();
+            const currD = dateToday.getDate().toString();
             const currM = dateToday.getMonth();
-
-            const date = new Date(e.target.dataset.actual);
-            const render = document.getElementById('cInsMessBlock');
-            console.log(render)
-            const ch = date.getHours();
-            const cm = date.getMinutes();
+            const date = new Date(main.dataset.actual);
+            // const ch = dateToday.getHours();
+            const ch = new Date("2023-01-18 00:20").getHours();
+            const cm = dateToday.getMinutes();
             const gD = date.getDate().toString();
             const gM = date.getMonth();
-            console.log(date)
-            console.log(gD)
-            // const inD = KodimLib().customFormatDate(d.getDate());
-            // const inpId = document.getElementById(KodimLibSettings.inputId);
-            // document.getElementById(KodimLibSettings.selector).dataset.actual = inD;
-            // inpId.value = inD;
 
-            // const ch = new Date("2023-01-17 00:20").getHours();
-            // const ch = new Date("2023-01-17 17:20").getHours();
-            // const ch = new Date("2023-01-17 15:00").getHours();
+            console.log("ch  :"+ch)
 
-            // const cm = new Date("2023-01-17 17:20").getMinutes();
-            // const cm = new Date("2023-01-17 15:00").getMinutes();
-
-            if (gD && currM === gM) {
-                console.log(true)
-                if (9 <= ch && ch <= 17) {
-                    if (ch === 17 && cm <= 30) {
-                        render.innerHTML = `<span style="color:orange">${message[lang].key2}</span>`;
+            if(priority === "priority"){
+                kodimKalendar.resetToday()
+                if (0 <= ch && ch <= 8) {
+                    render.innerHTML = `<span style="color:green">${message[lang].key7}</span>`;
+                } else if(9 <= ch && ch <= 17){
+                    render.innerHTML = `<span style="color:green">${message[lang].key5}</span>`;
+                }else{
+                    render.innerHTML = `<span style="color:red">${message[lang].key6}</span>`;
+                }
+            }else{
+                console.log("run no priority")
+                if (gD===currD && currM===gM) {
+                    if (9 <= ch && ch <= 17) {
+                        if (ch === 17 && cm <= 30) {
+                            render.innerHTML = `<span style="color:orange">${message[lang].key2}</span>`;
+                        }
+                        else {
+                            render.innerHTML = `<span style="color:green">${message[lang].key1}</span>`;
+                        }
+                    }else if(0 <= ch && ch <= 8){
+                        render.innerHTML = `<span style="color:green">${message[lang].key4}</span>`;
                     }
                     else {
-                        render.innerHTML = `<span style="color:green">${message[lang].key1}</span>`;
+                        render.innerHTML = `<span style="color:red">${message[lang].key3}</span>`;
                     }
-                }else if(0 <= ch && ch <= 8){
-                    render.innerHTML = `<span style="color:green">${message[lang].key4}</span>`;
+                } else {
+                    console.log(false)
+                    render.innerHTML = "";
                 }
-                else {
-                    render.innerHTML = `<span style="color:red">${message[lang].key3}</span>`;
-                }
-            } else {
-                console.log(false)
-                render.innerHTML = ""
             }
+        }
+
+        main.addEventListener("change", function(e) {
+            eventMessage(e.target);
         })
     })
 
