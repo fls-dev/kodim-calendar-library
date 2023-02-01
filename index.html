@@ -13,6 +13,7 @@
             font-family: 'Open Sans', sans-serif;
         }
         .no-event{pointer-events: none}
+
     </style>
 </head>
 <body>
@@ -71,8 +72,9 @@
 
         const main = document.getElementById('startCalendar');
         const render = document.getElementById('cInsMessBlock');
+
         document.getElementById('priority').addEventListener("change", function(e) {
-            console.log(e.target.value)
+            console.log("change")
             if(e.target.value === "priority"){
                 main.classList.add('no-event');
                 eventMessage()
@@ -87,10 +89,9 @@
             const dateToday = new Date();
             const currD = dateToday.getDate().toString();
             const currM = dateToday.getMonth();
-            const date = new Date(main.dataset.actual);
-            // const ch = dateToday.getHours();
-            const ch = new Date("2023-01-18 00:20").getHours();
             const cm = dateToday.getMinutes();
+            const ch = dateToday.getHours();
+            const date = new Date(main.dataset.actual);
             const gD = date.getDate().toString();
             const gM = date.getMonth();
 
